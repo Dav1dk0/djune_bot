@@ -10,7 +10,7 @@ from aiogram import html
 
 from aiogram import F
 
-from settings import config
+from setting import config
 
 logger = logging.getLogger(__name__)
 # Bot token can be obtained via https://t.me/BotFahter
