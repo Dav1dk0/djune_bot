@@ -22,6 +22,10 @@ dp = Dispatcher()
 # All handlers should be attached to the Router (or Dispatcher)
 router = Router()
 
+def user_name(message: Message):
+    return message.from_user.full_name
+
+
 
 @router.message(Command(commands=["start1"]))
 async def command_start_handler1(message: Message) -> None:
@@ -30,9 +34,12 @@ async def command_start_handler1(message: Message) -> None:
     """
     await message.answer(f"Hello, <b>What is your name?</b>")
 
-@router.message()
-async def message_handler(message: types.Message) -> None:
-    await message.answer(f"Hello, <b>{message.text}!</b>")
+@router.message(Command(commands=["start"]))
+async def start2(message: Message) -> None:
+    """
+    This handler receive messages with `/start` command
+    """
+    await message.answer(f"<i>Hello, {message.from_user.full_name}, how i can help you?</i>")
 
 @router.message(Command(commands=["code"]))
 async def command_start_handler1(message: Message) -> None:
@@ -42,6 +49,37 @@ async def command_start_handler1(message: Message) -> None:
     f = open('main.py').read()
     await message.answer(f"{f}")
 
+@router.message(Command("fuck"))
+async def any_massage(message: Message) -> None:
+    await message.reply(f"Hello, {html.bold(html.italic(user_name(message)))}")
+
+@router.message(Command("dice"))
+async def any_massage(message: Message) -> None:
+    await message.answer_dice()
+
+from aiogram.enums.dice_emoji import DiceEmoji
+
+@router.message(Command("dice2"))
+async def any_massage(message: Message) -> None:
+    await message.answer_dice(emoji=DiceEmoji.DART)
+
+@router.message(Command("name"))
+async def any_massage(message: Message, command: CommandObject) -> None:
+    letters = command.args.lower()
+    print(letters)
+    if 'a' in letters and 'o' in letters:
+        await message.answer(f"NY")
+    elif 'a' in letters:
+        await message.answer(f"LO")
+    elif 'o' in letters:
+        await message.answer(f"LO")
+    else:
+        await message.answer(f"IOWA")
+
+@router.message(F.photo)
+async def any_massage(message: Message) -> None:
+    photo = message.photo[-1]
+    await message.answer(f"Your photo, {photo.width}x{photo.height} px)")
 
 
 async def main() -> None:
