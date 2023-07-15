@@ -25,6 +25,9 @@ It will look like this `6327345436:AAGsxN9m6P1-l5sFFGSfhdugro9tt3I8g`
 ### 4. Set bot token
 To set your bot token write this comman in the terminal `export bot_token="Your bot token"`
 
+### 5. Run your bot
+To run your bot you can write `python3 main.py` in the terminal
+
 ## BOT CAN
 
 - when you send `/start1` to bot it answer you `Hello, (username)`
