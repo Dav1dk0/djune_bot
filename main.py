@@ -2,10 +2,11 @@ import os
 
 import logging
 import asyncio
+import random
 
 from aiogram import Bot, Dispatcher, Router, types
 from aiogram.filters import Command, CommandObject
-from aiogram.types import Message
+from aiogram.types import Message, URLInputFile
 from aiogram import html
 
 from aiogram import F
@@ -34,7 +35,31 @@ async def command_start_handler1(message: Message) -> None:
     """
     await message.answer(f"Hello, <b>What is your name?</b>")
 
-@router.message(Command(commands=["start"]))
+@router.message(Command("start"))
+async def cmd_start(message: types.Message):
+    kb = [
+            [
+                types.KeyboardButton(text="with"),
+                types.KeyboardButton(text="without"),
+        ],
+    ]
+
+    keyboard = types.ReplyKeyboardMarkup(
+        keyboard=kb,
+        resize_keyboard=True,
+        input_field_placeholder="Виберіть спосіб подачі",
+        # one_time_keyboard=True / False
+    )
+    await message.answer("Як подавати котлети?", reply_markup=keyboard)
+
+@router.message(F.text)
+async def echo_handler(message: types.Message) -> None:
+    if message.text == "with":
+        await message.answer("Yeey")
+    elif message.text == "without":
+        await message.answer(":(")
+
+@router.message(Command(commands=["start2"]))
 async def start2(message: Message) -> None:
     """
     This handler receive messages with `/start` command
@@ -80,6 +105,19 @@ async def any_massage(message: Message, command: CommandObject) -> None:
 async def any_massage(message: Message) -> None:
     photo = message.photo[-1]
     await message.answer(f"Your photo, {photo.width}x{photo.height} px)")
+
+
+@router.message(Command("random_image"))
+async def get_random_image(message: types.Message) -> None:
+
+    rand_width = random.randint(32, 1920)
+    rand_heinght = random.randint(32, 1080)
+
+    image_from_url = URLInputFile(f"https://random.imagecdn.app/{rand_width}/{rand_heinght}")
+    await message.answer_photo(
+        image_from_url,
+        caption=f"Image {rand_width}x{rand_heinght} px"
+    )
 
 
 async def main() -> None:
