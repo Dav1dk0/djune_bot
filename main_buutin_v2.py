@@ -27,16 +27,22 @@ dp = Dispatcher()
 router = Router()
 
 
+@router.message(Command("random_image_size"))
+async def get_random_image(message: types.Message) -> None:
+    rand_width = random.randint(32, 1920)
+    rand_heinght = random.randint(32, 1080)
+
+    image_from_url = URLInputFile(f"https://random.imagecdn.app/{rand_width}/{rand_heinght}")
+    await message.answer_photo(
+        image_from_url,
+        caption=f"Image {rand_width}x{rand_heinght} px"
+    )
+
 @router.message(Command("random_image"))
 async def get_random_image(message: types.Message, command: CommandObject) -> None:
-    if len(command.args) > 0:
-        print(int(command.args.split()[0]))
-        comm = command.args.split()
-        rand_width = comm[0]
-        rand_heinght = comm[1]
-    else:
-        rand_width = random.randint(32, 1920)
-        rand_heinght = random.randint(32, 1080)
+    comm = command.args.split()
+    rand_width = comm[0]
+    rand_heinght = comm[1]
 
     image_from_url = URLInputFile(f"https://random.imagecdn.app/{rand_width}/{rand_heinght}")
     await message.answer_photo(

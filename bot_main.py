@@ -52,14 +52,15 @@ async def reply_builder2(message: types.Message):
             if curr_from not in uniq_curr_from:
                 uniq_curr_from.append(curr_from)
                 builder.add(types.KeyboardButton(text=curr_from))
+                await message.answer(
+                "Choose currency:",
+                reply_markup=builder.as_markup(resize_keyboard=False, one_time_keyboard=True),
+                )
         if curr["currency"][1] == str(message.text):
             await message.answer(f"{curr['val']}")
 
     builder.adjust(4)
-    await message.answer(
-        "Choose currency:",
-        reply_markup=builder.as_markup(resize_keyboard=False, one_time_keyboard=True),
-    )
+
 
 
 
